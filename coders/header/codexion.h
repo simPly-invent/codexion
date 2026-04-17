@@ -32,10 +32,13 @@ typedef struct s_coder
 {
     pthread_t   thread;
     int         id;
+    int         burnout;
     int         routine;
     int         compile;
     int         debug;
     int         refractor;
+    bool        is_dongle;
+
 }               t_coder;
 
 
@@ -44,4 +47,4 @@ int     create_thread(t_coder anyone);
 int     close_thread(t_coder anyone);
 void    *routine_coder(void *arg);
 int     *parser(char **argv, int size, t_pars parsing);
-int     init_env(int *tab, t_pars parsing);
+void     init_env(int *tab, t_pars *parsing);
