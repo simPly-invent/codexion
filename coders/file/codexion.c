@@ -10,13 +10,5 @@ int main(int argc, char **argv)
     {
         printf("[\033[31merror\033[0m]: to few argument");
     }
-    else
-    {
-        while(tab[i])
-        {
-            printf("%d, ", tab[i]);
-            i++;
-        }
-    }
     return 0;
 }

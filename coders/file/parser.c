@@ -18,6 +18,16 @@ int *parser(char **argv, int size, t_pars parsing)
         i++;
         j++;
     }
-    init_env(tab, parsing);
+    init_env(tab, &parsing);
+    printf("\033c");
+    i = 0;
+    while(i < 3)
+    {
+        printf(".");
+        fflush(stdout);
+        sleep(1);
+        i++;
+    }
+    printf("\n[\033[32mOk\033[0m]: initialization de l'environement");
     return tab;
 }
