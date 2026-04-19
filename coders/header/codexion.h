@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 // typedef struct s_dongle
@@ -33,18 +34,17 @@ typedef struct s_coder
     pthread_t   thread;
     int         id;
     int         burnout;
-    int         routine;
     int         compile;
     int         debug;
     int         refractor;
-    bool        is_dongle;
-
 }               t_coder;
 
 
 
-int     create_thread(t_coder anyone);
-int     close_thread(t_coder anyone);
+void    init_coder(t_coder *any, t_pars *parsing, int id);
+int     create_thread(t_coder *anyone);
+int     close_thread(t_coder *anyone);
 void    *routine_coder(void *arg);
-int     *parser(char **argv, int size, t_pars parsing);
-void     init_env(int *tab, t_pars *parsing);
+int     *parser(char **argv, int size, t_pars *parsing);
+void    init_env(int *tab, t_pars *parsing);
+int     check_fifo_edf(char *str);
