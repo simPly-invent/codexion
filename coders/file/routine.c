@@ -6,11 +6,11 @@ void    *routine_coder(void *arg)
     t_coder *coder;
 
     coder = (t_coder *)arg;
-    printf("Coder id.%d is compile", coder->id);
+    printf("\nCoder id.%d is compile\n", coder->id);
     sleep(coder->compile);
-    printf("Coder id.%d is debug", coder->id);
+    printf("\nCoder id.%d is debug\n", coder->id);
     sleep(coder->debug);
-    printf("Coder id.%d is refractor", coder->id);
+    printf("\nCoder id.%d is refractor\n", coder->id);
     sleep(coder->refractor);
     return (NULL);
 }

@@ -25,7 +25,7 @@ typedef struct s_pars
     int time_to_refactor;
     int number_of_compiles_required;
     int dongle_cooldown;
-    int scheduler;
+    char *scheduler;
 }   t_pars;
 
 
@@ -45,6 +45,7 @@ void    init_coder(t_coder *any, t_pars *parsing, int id);
 int     create_thread(t_coder *anyone);
 int     close_thread(t_coder *anyone);
 void    *routine_coder(void *arg);
-int     *parser(char **argv, int size, t_pars *parsing);
-void    init_env(int *tab, t_pars *parsing);
+int     parser(char **argv, int size, t_pars *parsing);
+void    init_env(int *tab, t_pars *parsing, char *str);
 int     check_fifo_edf(char *str);
+char    *ft_strdup(char *str);
