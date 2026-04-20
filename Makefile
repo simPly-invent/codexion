@@ -1,10 +1,9 @@
 NAME := codexion
-CFLAGS := -Wall -Wextra -Werror -pthread
+CFLAGS := -Wall -Wextra -Werror -pthread -g
 SRCDIR :=coders/file
+
 all:
-	$(CC) $(CFLAGS) coders/file/*.c -o $(NAME)
-$(SRCDIR)/%.o:$(SRCDIR)/%.c
-	cc -Wall -Wextra -Werror -Iinclude -c $< -o $@
+	$(CC) $(CFLAGS) $(SRCDIR)/*.c -o $(NAME)
 
 clean:
 

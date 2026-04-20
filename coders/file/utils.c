@@ -1,7 +1,7 @@
 #include "../header/codexion.h"
 
 
-void init_env(int *tab, t_pars *parsing)
+void init_env(int *tab, t_pars *parsing, char *str)
 {
     parsing->nbr_coder = tab[0];
     parsing->time_to_burnout = tab[1];
@@ -10,7 +10,7 @@ void init_env(int *tab, t_pars *parsing)
     parsing->time_to_refactor = tab[4];
     parsing->number_of_compiles_required = tab[5];
     parsing->dongle_cooldown = tab[6];
-    parsing->scheduler = tab[7];
+    parsing->scheduler = ft_strdup(str);
 }
 
 void init_coder(t_coder *any, t_pars *parsing, int id)
@@ -20,6 +20,33 @@ void init_coder(t_coder *any, t_pars *parsing, int id)
     any->compile = parsing->time_to_compile;
     any->debug = parsing->time_to_debug;
     any->refractor = parsing->time_to_refactor;
+}
+
+static int ft_strlen(char *str)
+{
+    int i = 0;
+    while (str[i])
+        i++;
+    return i;
+}
+
+char *ft_strdup(char *str)
+{
+    int i;
+    int size;
+    char *ptr;
+
+    i = 0;
+    size = ft_strlen(str);
+    ptr = malloc(sizeof(char) * (size + 1));
+
+    while (str[i])
+    {
+        ptr[i] = str[i];
+        i++;
+    }
+    ptr[i] = 0;
+    return ptr;
 }
 
 
