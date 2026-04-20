@@ -1,7 +1,15 @@
 #include "../header/codexion.h"
 
 
-void init_env(int *tab, t_pars *parsing, char *str)
+char *ft_strdup(char *str);
+void init_env(int *tab, t_pars *parsing, char *str);
+void init_coder(t_coder *any, t_pars *parsing, int id);
+void init_dongle(t_dongle *dongle, t_pars *parsing, int size);
+int check_fifo_edf(char *str);
+static void   normalize_lower_case(char *str);
+
+
+char *init_env(int *tab, t_pars *parsing, char *str)
 {
     parsing->nbr_coder = tab[0];
     parsing->time_to_burnout = tab[1];
@@ -9,7 +17,7 @@ void init_env(int *tab, t_pars *parsing, char *str)
     parsing->time_to_debug = tab[3];
     parsing->time_to_refactor = tab[4];
     parsing->number_of_compiles_required = tab[5];
-    parsing->dongle_cooldown = tab[6];
+    parsing->dgle_cooldown = tab[6];
     parsing->scheduler = ft_strdup(str);
 }
 
@@ -22,13 +30,14 @@ void init_coder(t_coder *any, t_pars *parsing, int id)
     any->refractor = parsing->time_to_refactor;
 }
 
-static int ft_strlen(char *str)
+void    init_dongle(t_dongle *dongle, t_pars *parsing, int size)
 {
-    int i = 0;
-    while (str[i])
-        i++;
-    return i;
+    dongle->plugged = false;
+    dongle->priority_queu = malloc(sizeof(t_coder *) * size);
+    dongle->len_queu = 0;
+    dongle->dongle_cooldown = parsing->dgle_cooldown;
 }
+
 
 char *ft_strdup(char *str)
 {
@@ -37,7 +46,7 @@ char *ft_strdup(char *str)
     char *ptr;
 
     i = 0;
-    size = ft_strlen(str);
+    size = strlen(str);
     ptr = malloc(sizeof(char) * (size + 1));
 
     while (str[i])
@@ -49,9 +58,20 @@ char *ft_strdup(char *str)
     return ptr;
 }
 
+static void   normalize_lower_case(char *str)
+{
+    int i = 0;
+    while(str[i])
+    {
+        if(str[i] >= 'A' && str[i] <= 'Z')
+            str[i] += 32;
+        i++;
+    }
+}
 
 int check_fifo_edf(char *str)
 {
+    normalize_lower_case(str);
     if (strcmp(str, "edf") == 0 || strcmp(str, "fifo") == 0)
         return 0;
     else

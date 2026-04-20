@@ -9,6 +9,7 @@ int main(int argc, char **argv)
     int tmp;
     t_pars parsing;
     t_coder *coders;
+    t_dongle *dongles;
 
     i = 0;
     size = 0;
@@ -22,25 +23,44 @@ int main(int argc, char **argv)
     coders = malloc(sizeof(t_coder) * size);
     if (!coders)
         return (0);
-    tmp = size ;
+    dongles = malloc(sizeof(t_dongle) * size);
+    if(!dongles)
+    {
+        free(coders);
+        return 0;
+    }
+    tmp = size;
     while(tmp > 0)
     {
-        init_coder(&coders[i], &parsing, i);
+        init_coder(&coders[i], &parsing, i + 1);
         i++;
         tmp--;
     }
     i = 0;
-    while (i < size)
+    while(i < size)
     {
-        create_thread(&coders[i]);
-        i++;   
+        init_dongle(&dongles[i], &parsing, size);
+        i++;
     }
     i = 0;
-    while (i < size)
+    while(i < size)
     {
-        close_thread(&coders[i]);
-        i++;   
+        coders[i].left = &dongles[i];
+        coders[i].right = &dongles[(i + 1) % size];
+        i++;
     }
+    // i = 0;
+    // while (i < size)
+    // {
+    //     create_thread(&coders[i]);
+    //     i++;   
+    // }
+    // i = 0;
+    // while (i < size)
+    // {
+    //     close_thread(&coders[i]);
+    //     i++;   
+    // }
     free(coders);
     return 0;
 }

@@ -7,10 +7,10 @@ void    *routine_coder(void *arg)
 
     coder = (t_coder *)arg;
     printf("\nCoder id.%d is compile\n", coder->id);
-    sleep(coder->compile);
+    usleep(coder->compile);
     printf("\nCoder id.%d is debug\n", coder->id);
-    sleep(coder->debug);
+    usleep(coder->debug);
     printf("\nCoder id.%d is refractor\n", coder->id);
-    sleep(coder->refractor);
+    usleep(coder->refractor);
     return (NULL);
 }
