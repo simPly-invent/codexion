@@ -25,7 +25,7 @@ int parser(char **argv, int size, t_pars *parsing)
         i++;
         j++;
     }
-    init_env(tab, parsing, str);
+    init_pars(tab, parsing, str);
     free(tab);
     printf("\033c");
     i = 0;
