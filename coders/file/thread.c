@@ -1,4 +1,6 @@
 #include "../header/codexion.h"
+#include <pthread.h>
+#include <stdbool.h>
 
 int     create_thread(t_coder *anyone)
 {
@@ -15,14 +17,27 @@ int     close_thread(t_coder *anyone)
     return 0;
 }
 
-void     take_dongle(t_coder *coder, t_dongle *dongle)
+void     dongle_in_hand(t_dongle *dongle)
 {
     if (pthread_mutex_lock(&dongle->mutex) == 0)
     {
-        if (!dongle->plugged)
-            dongle->plugged = true;
+        while (dongle->plugged)
+            pthread_cond_wait(&dongle->cond, &dongle->mutex);
+        dongle->plugged = true;
         pthread_mutex_unlock(&dongle->mutex);
     }
-    else
-        pthread_cond_wait(&dongle->cond, &dongle->mutex);
 }
+
+
+void    dongle_on_table(t_dongle *dongle)
+{
+    if (pthread_mutex_lock(&dongle->mutex) == 0)
+    {
+        dongle->plugged = false;
+        pthread_cond_broadcast(&dongle->cond);
+        pthread_mutex_unlock(&dongle->mutex);
+    }
+}
+
+void    simu_monitor()
+{}
