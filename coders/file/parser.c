@@ -25,7 +25,7 @@ int parser(char **argv, int size, t_pars *parsing)
         i++;
         j++;
     }
-    scheduler = init_env(tab, parsing, str);
+    init_env(tab, parsing, str);
     free(tab);
     printf("\033c");
     i = 0;

@@ -27,6 +27,7 @@ typedef struct s_dongle
 {
     bool            plugged;
     pthread_mutex_t mutex;
+    pthread_cond_t  cond;
     t_coder         **priority_queu;
     int             len_queu;
     int             dongle_cooldown;
