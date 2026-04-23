@@ -9,7 +9,7 @@ int check_fifo_edf(char *str);
 static void   normalize_lower_case(char *str);
 
 
-char *init_env(int *tab, t_pars *parsing, char *str)
+void    init_env(int *tab, t_pars *parsing, char *str)
 {
     parsing->nbr_coder = tab[0];
     parsing->time_to_burnout = tab[1];
@@ -33,6 +33,7 @@ void init_coder(t_coder *any, t_pars *parsing, int id)
 void    init_dongle(t_dongle *dongle, t_pars *parsing, int size)
 {
     dongle->plugged = false;
+    pthread_mutex_init(&dongle->mutex, NULL);
     dongle->priority_queu = malloc(sizeof(t_coder *) * size);
     dongle->len_queu = 0;
     dongle->dongle_cooldown = parsing->dgle_cooldown;
