@@ -4,14 +4,14 @@
 
 
 char *ft_strdup(char *str);
-void init_env(int *tab, t_pars *parsing, char *str);
+void init_pars(int *tab, t_pars *parsing, char *str);
 void init_coder(t_coder *any, t_pars *parsing, int id);
 void init_dongle(t_dongle *dongle, t_pars *parsing, int size);
 int check_fifo_edf(char *str);
 static void   normalize_lower_case(char *str);
 
 
-void    init_env(int *tab, t_pars *parsing, char *str)
+void    init_pars(int *tab, t_pars *parsing, char *str)
 {
     parsing->nbr_coder = tab[0];
     parsing->time_to_burnout = tab[1];
@@ -26,12 +26,12 @@ void    init_env(int *tab, t_pars *parsing, char *str)
 void init_coder(t_coder *any, t_pars *parsing, int id)
 {
     any->id = id;
-    any->session_state= false;
     any->burnout = parsing->time_to_burnout;
     any->compile = parsing->time_to_compile;
     any->debug = parsing->time_to_debug;
     any->refractor = parsing->time_to_refactor;
     any->routine = parsing->number_of_routine_required;
+    gettimeofday(&any->last_time_compile, NULL);
 }
 
 void    init_dongle(t_dongle *dongle, t_pars *parsing, int size)
@@ -41,6 +41,54 @@ void    init_dongle(t_dongle *dongle, t_pars *parsing, int size)
     dongle->cooldown_priority = malloc(sizeof(t_coder *) * size);
     dongle->len_queu = 0;
     dongle->dongle_cooldown = parsing->dgle_cooldown;
+    gettimeofday(&dongle->last_time_register, NULL);
+}
+
+
+void    init_monitor(t_info_monitor *monitor, t_pars *parsing, t_simulation *state, t_coder *coders)
+{
+    monitor->coders = coders;
+    monitor->parsing = parsing;
+    monitor->state = state;
+}
+
+
+void    init_simu(t_info_monitor *info)
+{
+    pthread_mutex_init(&info->state->mutex, NULL);
+    info->state->simu_state = true;
+}
+
+long    convert_time_stamp()
+{}
+
+
+void    init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size)
+{
+    int i;
+    int tmp;
+
+    i = 0;
+    tmp = size;
+    while(tmp > 0)
+    {
+        init_coder(&coders[i], parsing, i + 1);
+        i++;
+        tmp--;
+    }
+    i = 0;
+    while(i < size)
+    {
+        init_dongle(&dongles[i], parsing, size);
+        i++;
+    }
+    i = 0;
+    while(i < size)
+    {
+        coders[i].left = &dongles[i];
+        coders[i].right = &dongles[(i + 1) % size];
+        i++;
+    }
 }
 
 
