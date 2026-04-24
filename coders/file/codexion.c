@@ -3,20 +3,19 @@
 
 int main(int argc, char **argv)
 {
-    int i;
     int size;
     int verif;
-    int tmp;
     t_pars parsing;
     t_coder *coders;
     t_dongle *dongles;
+    t_info_monitor *info;
+    t_simulation *simu;
 
-    i = 0;
     size = 0;
     verif = parser(argv, argc - 1, &parsing);
     if (verif < 0)
     {
-        printf("an error occurse");
+        printf("\nAn error occurse\n");
         return 0;
     }   
     size = parsing.nbr_coder;
@@ -29,38 +28,11 @@ int main(int argc, char **argv)
         free(coders);
         return 0;
     }
-    tmp = size;
-    while(tmp > 0)
-    {
-        init_coder(&coders[i], &parsing, i + 1);
-        i++;
-        tmp--;
-    }
-    i = 0;
-    while(i < size)
-    {
-        init_dongle(&dongles[i], &parsing, size);
-        i++;
-    }
-    i = 0;
-    while(i < size)
-    {
-        coders[i].left = &dongles[i];
-        coders[i].right = &dongles[(i + 1) % size];
-        i++;
-    }
-    // i = 0;
-    // while (i < size)
-    // {
-    //     create_thread(&coders[i]);
-    //     i++;   
-    // }
-    // i = 0;
-    // while (i < size)
-    // {
-    //     close_thread(&coders[i]);
-    //     i++;   
-    // }
+    init_table(coders, &parsing, dongles, size);
+    init_simulation(info);
+    init_monitor(info, &parsing, simu, coders);
+    
+
     free(coders);
     return 0;
 }

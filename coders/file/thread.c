@@ -39,5 +39,24 @@ void    dongle_on_table(t_dongle *dongle)
     }
 }
 
-void    simu_monitor()
-{}
+void    thread_monitor(t_info_monitor *info, int size)
+{
+    int i = 0;
+    int tmp = 0;
+    long res = 0;
+    while (info->state->simu_state)
+    {
+        while (&info->coders[i])
+        {
+            res = convert_time_stamp(gettimeofday(), info->coders[i].);
+            if (res > info->parsing->time_to_burnout)
+            {
+                exit(0);
+            }
+            i++;
+        }
+        
+        
+    }
+    
+}

@@ -23,8 +23,8 @@ void    *routine_coder(void *arg)
 
 void     coder_compile(t_coder *coder)
 {
-    take_dongle(coder->left);
-    take_dongle(coder->right);
+    dongle_in_hand(coder->left);
+    dongle_in_hand(coder->right);
     printf("\nCoder id.%d is compile\n", coder->id);
     usleep(coder->compile);
 }
