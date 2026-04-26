@@ -6,7 +6,7 @@ all:
 	$(CC) $(CFLAGS) $(SRCDIR)/*.c -o $(NAME)
 
 clean:
-
+	rm codexion
 fclean:
 
 re:

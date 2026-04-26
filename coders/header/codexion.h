@@ -4,11 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/time.h>
 
 
 typedef struct s_dongle t_dongle;
 typedef struct s_coder t_coder;
 typedef struct s_simulation t_simulation;
+typedef struct s_character t_character;
 
 typedef struct s_pars
 {
@@ -25,6 +27,7 @@ typedef struct s_pars
 
 typedef struct s_dongle
 {
+    int             id;
     bool            plugged;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
@@ -52,28 +55,49 @@ typedef struct s_coder
 typedef struct s_simulation
 {
     pthread_mutex_t  mutex; 
-    bool        simu_state;
+    bool             simu_state;
+    int              coders_done;
 }           t_simulation;
 
 typedef struct s_info_monitor
 {
     t_pars       *parsing;
-    t_simulation *state;
+    t_character  *chara;
     t_coder      *coders;
+    t_dongle     *dongles;
+    int          size;
 }       t_info_monitor;
 
 
-void    init_coder(t_coder *any, t_pars *parsing, int id);
-void    init_dongle(t_dongle *dongle, t_pars *parsing, int size);
-void    init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size);
-void    init_monitor(t_info_monitor *monitor, t_pars *parsing, t_simulation *state, t_coder *coders);
-void    init_pars(int *tab, t_pars *parsing, char *str);
-void    dongle_in_hand(t_dongle *dongle);
-void    *routine_coder(void *arg);
-void    coder_compile(t_coder *coder);
-void    thread_monitor(t_info_monitor *info, int size);
-int     create_thread(t_coder *anyone);
-int     close_thread(t_coder *anyone);
-int     parser(char **argv, int size, t_pars *parsing);
-int     check_fifo_edf(char *str);
-char    *ft_strdup(char *str);
+typedef struct s_character
+{
+    t_coder      *coder;
+    t_simulation *state;
+    t_dongle     *dongles;
+}           t_character;
+
+
+
+void            init_coder(t_coder *any, t_pars *parsing, int id);
+void            init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id);
+void            init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size);
+void            init_monitor(t_info_monitor *monitor, t_pars *parsing, t_character *chara, t_coder *coders, int size);
+void            init_pars(int *tab, t_pars *parsing, char *str);
+void            init_simu(t_simulation *state);
+void            dongle_in_hand(t_dongle *dongle, bool *simu);
+void            dongle_on_table(t_dongle *dongle);
+void            *routine_coder(void *arg);
+void            *thread_monitor(void *info);
+void            coder_compile(t_character *chara);
+long            convert_time_stamp_coder(t_coder *coder);
+struct timespec convert_time_stamp_dongle(t_dongle *dongle);
+void            init_character(t_character *bunch, t_coder *coders, t_simulation *state, t_dongle *dongles);
+int             create_thread(t_character *anyone);
+int             close_thread(t_character *anyone);
+bool            create_thread_monitor(t_info_monitor *monitor, pthread_t *thread_);
+bool            close_thread_monitor(pthread_t thread_);
+bool            cooldown_limit(t_dongle *dongle);
+int             parser(char **argv, int size, t_pars *parsing);
+int             check_fifo_edf(char *str);
+char            *ft_strdup(char *str);
+void            loading_screen();
