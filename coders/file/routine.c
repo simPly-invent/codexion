@@ -5,26 +5,56 @@
 
 void    *routine_coder(void *arg)
 {   
-    t_coder *coder;
+    t_character *chara;
 
-    coder = (t_coder *)arg;
-    while (coder->routine > 0)
+    chara = (t_character *)arg;
+    while (chara->coder->routine > 0 && chara->state->simu_state)
     {
-        coder_compile(coder);
-        printf("\nCoder id.%d is debug\n", coder->id);
-        usleep(coder->debug);
-        printf("\nCoder id.%d is refractor\n", coder->id);
-        usleep(coder->refractor);
-        coder->routine--;
+        if (!chara->state->simu_state)
+            break;
+        coder_compile(chara);
+        if (!chara->state->simu_state)
+            break;
+        printf("\nCoder id.%d is debug\n", chara->coder->id);
+        usleep(chara->coder->debug * 1000);
+        printf("\nCoder id.%d is refractor\n", chara->coder->id);
+        usleep(chara->coder->refractor * 1000);
+        chara->coder->routine--;
     }
+    chara->state->coders_done++;
     return (NULL);
 }
 
 
-void     coder_compile(t_coder *coder)
+void     coder_compile(t_character *chara)
 {
-    dongle_in_hand(coder->left);
-    dongle_in_hand(coder->right);
-    printf("\nCoder id.%d is compile\n", coder->id);
-    usleep(coder->compile);
+    if (chara->coder->left->id > chara->coder->right->id)
+    {   if(chara->state->simu_state)
+            dongle_in_hand(chara->coder->right, &chara->state->simu_state);
+        else
+            return ;
+        if(chara->state->simu_state)
+            dongle_in_hand(chara->coder->left, &chara->state->simu_state);
+        else
+            return ;
+    }
+    else
+    {
+        if(chara->state->simu_state)
+            dongle_in_hand(chara->coder->left, &chara->state->simu_state);
+        else
+            return ;
+        if(chara->state->simu_state)
+            dongle_in_hand(chara->coder->right, &chara->state->simu_state);
+        else
+            return ;
+    }
+    // printf("oui id.%d", chara->coder->id);
+    gettimeofday(&chara->coder->last_time_compile, NULL);
+    if(chara->state->simu_state){
+        printf("\nCoder id.%d is compile\n", chara->coder->id);
+        usleep(chara->coder->compile * 1000);
+        dongle_on_table(chara->coder->left);
+        dongle_on_table(chara->coder->right);
+    }
 }
