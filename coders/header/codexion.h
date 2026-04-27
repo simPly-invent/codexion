@@ -57,6 +57,7 @@ typedef struct s_simulation
     pthread_mutex_t  mutex; 
     bool             simu_state;
     int              coders_done;
+    int              size;
 }           t_simulation;
 
 typedef struct s_info_monitor
@@ -74,20 +75,38 @@ typedef struct s_character
     t_coder      *coder;
     t_simulation *state;
     t_dongle     *dongles;
+    int          size;
 }           t_character;
 
+typedef struct s_pa
+{
+    int i;
+    int j;
+    int *tab;
+    char *str;
+}       t_pa;
 
+typedef struct s_thmonitor
+{
+    int     i;
+    int     k;
+    int     check;
+    long    res;
+    t_info_monitor *info;
+}       t_thmonitor;
 
 void            init_coder(t_coder *any, t_pars *parsing, int id);
 void            init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id);
 void            init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size);
-void            init_monitor(t_info_monitor *monitor, t_pars *parsing, t_character *chara, t_coder *coders, int size);
+void            init_monitor(t_info_monitor *monitor, t_pars *parsing, t_character *chara, t_coder *coders);
 void            init_pars(int *tab, t_pars *parsing, char *str);
-void            init_simu(t_simulation *state);
-void            dongle_in_hand(t_dongle *dongle, bool *simu);
+void            init_simu(t_simulation *state, int size);
+void            dongle_in_hand(t_dongle *dongle, t_character *chara, long time);
 void            dongle_on_table(t_dongle *dongle);
+int             check_burnout(int i, int k, long res, t_info_monitor *info);
 void            *routine_coder(void *arg);
 void            *thread_monitor(void *info);
+void            check_state_session(int ms, t_character *chara);
 void            coder_compile(t_character *chara);
 long            convert_time_stamp_coder(t_coder *coder);
 struct timespec convert_time_stamp_dongle(t_dongle *dongle);
@@ -101,3 +120,4 @@ int             parser(char **argv, int size, t_pars *parsing);
 int             check_fifo_edf(char *str);
 char            *ft_strdup(char *str);
 void            loading_screen();
+void            check_simu_and_check_state(t_character *chara);
