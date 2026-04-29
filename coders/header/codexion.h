@@ -49,6 +49,7 @@ typedef struct s_coder
     int             refractor;
     t_dongle        *left;
     t_dongle        *right;
+    char            *scheduler;
     struct timeval  last_time_compile;
 }               t_coder;
 
@@ -121,3 +122,4 @@ int             check_fifo_edf(char *str);
 char            *ft_strdup(char *str);
 void            loading_screen();
 void            check_simu_and_check_state(t_character *chara);
+void	        edf_order(t_dongle *dongle, t_character *chara);

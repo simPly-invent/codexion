@@ -20,6 +20,7 @@ void	init_coder(t_coder *any, t_pars *parsing, int id)
 	any->debug = parsing->time_to_debug;
 	any->refractor = parsing->time_to_refactor;
 	any->routine = parsing->number_of_routine_required;
+	any->scheduler = parsing->scheduler;
 	gettimeofday(&any->last_time_compile, NULL);
 }
 
