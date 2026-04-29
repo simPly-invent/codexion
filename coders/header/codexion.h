@@ -6,11 +6,32 @@
 #include <stdbool.h>
 #include <sys/time.h>
 
-
+typedef struct s_pars t_pars;
+typedef struct s_simulation t_simulation;
 typedef struct s_dongle t_dongle;
 typedef struct s_coder t_coder;
 typedef struct s_simulation t_simulation;
 typedef struct s_character t_character;
+typedef struct s_info_monitor t_info_monitor;
+
+
+
+typedef struct s_main
+{
+    int				i;
+	int				size;
+	int				verif;
+	bool			response;
+	t_pars			*parsing;
+	t_coder			*coders;
+	t_dongle		*dongles;
+	t_info_monitor	*info;
+	t_simulation	*simu;
+	pthread_t		monitor;
+	t_character		*chara;
+}       t_main;
+
+
 
 typedef struct s_pars
 {
