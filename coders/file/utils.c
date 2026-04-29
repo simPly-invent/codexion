@@ -81,7 +81,6 @@ void	edf_order(t_dongle *dongle, t_character *chara)
 			j = i;
 			break;
 		}
-
 		i++;
 	}
 	i = dongle->len_queu;
