@@ -21,6 +21,7 @@ void	init_coder(t_coder *any, t_pars *parsing, int id)
 	any->refractor = parsing->time_to_refactor;
 	any->routine = parsing->number_of_routine_required;
 	any->scheduler = parsing->scheduler;
+	pthread_mutex_init(&any->mutex, NULL);
 	gettimeofday(&any->last_time_compile, NULL);
 }
 
@@ -29,6 +30,7 @@ void	init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id)
 	dongle->id = id;
 	dongle->plugged = false;
 	pthread_mutex_init(&dongle->mutex, NULL);
+	pthread_cond_init(&dongle->cond, NULL);
 	dongle->cooldown_priority = malloc(sizeof(t_coder *) * size);
 	dongle->len_queu = 0;
 	dongle->dongle_cooldown = parsing->dgle_cooldown;

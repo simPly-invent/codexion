@@ -8,22 +8,22 @@ void	check_simu_and_check_state(t_character *chara)
 	res = convert_time_stamp_coder(chara->coder);
 	if (chara->coder->left->id > chara->coder->right->id)
 	{
-		if (chara->state->simu_state)
+		if (get_simu_state(chara->state))
 			dongle_in_hand(chara->coder->right, chara, res);
 		else
 			return ;
-		if (chara->state->simu_state)
+		if (get_simu_state(chara->state))
 			dongle_in_hand(chara->coder->left, chara, res);
 		else
 			return ;
 	}
 	else
 	{
-		if (chara->state->simu_state)
+		if (get_simu_state(chara->state))
 			dongle_in_hand(chara->coder->left, chara, res);
 		else
 			return ;
-		if (chara->state->simu_state)
+		if (get_simu_state(chara->state))
 			dongle_in_hand(chara->coder->right, chara, res);
 		else
 			return ;
@@ -39,7 +39,7 @@ int	check_burnout(int i, int k, long res, t_info_monitor *info)
 		{
 			if (pthread_mutex_lock(&info->chara->state->mutex) == 0)
 			{
-				printf("\nThe coder id.%d will burnout\n", info->coders[i].id);
+				printf("%ld %d burned out", res, info->coders[i].id);
 				info->chara->state->simu_state = false;
 				while (k < info->size)
 				{
@@ -83,7 +83,7 @@ void	check_state_session(int ms, t_character *chara)
 	int	i;
 
 	i = 0;
-	while (i < ms && chara->state->simu_state)
+	while (i < ms && get_simu_state(chara->state))
 	{
 		usleep(1000);
 		i++;
