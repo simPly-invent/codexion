@@ -1,3 +1,4 @@
+#include <bits/types/struct_timeval.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -71,6 +72,7 @@ typedef struct s_coder
     t_dongle        *left;
     t_dongle        *right;
     char            *scheduler;
+    pthread_mutex_t mutex;
     struct timeval  last_time_compile;
 }               t_coder;
 
@@ -80,6 +82,7 @@ typedef struct s_simulation
     bool             simu_state;
     int              coders_done;
     int              size;
+    struct  timeval  start;
 }           t_simulation;
 
 typedef struct s_info_monitor
@@ -144,3 +147,7 @@ char            *ft_strdup(char *str);
 void            loading_screen();
 void            check_simu_and_check_state(t_character *chara);
 void	        edf_order(t_dongle *dongle, t_character *chara);
+bool            get_simu_state(t_simulation *state);
+long	        get_timestamp_ms(t_character *chara);
+void            secure_log(t_character *chara, char *message, long timestamp);
+void            secure_message(t_character *chara, char *message);

@@ -1,4 +1,5 @@
 #include "../header/codexion.h"
+#include <stdlib.h>
 
 int	parser(char **argv, int size, t_pars *parsing)
 {
@@ -11,9 +12,14 @@ int	parser(char **argv, int size, t_pars *parsing)
 	if (check_fifo_edf(argv[8]) == 1)
 		return (-1);
 	var.tab = malloc(sizeof(int) * size);
-	var.str = ft_strdup(argv[size]);
 	if (!var.tab)
 		return (-1);
+	var.str = ft_strdup(argv[size]);
+	if(!var.str)
+	{
+		free(var.tab);
+		return (-1);
+	}
 	while (var.i < size)
 	{
 		var.tab[var.j] = atoi(argv[var.i]);
@@ -22,7 +28,6 @@ int	parser(char **argv, int size, t_pars *parsing)
 	}
 	init_pars(var.tab, parsing, var.str);
 	free(var.tab);
-	loading_screen();
-	printf("\n[\033[32mOk\033[0m]: initialization de l'environement\n");
+	free(var.str);
 	return (0);
 }

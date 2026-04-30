@@ -1,5 +1,5 @@
 NAME := codexion
-CFLAGS := -Wall -Wextra -Werror -pthread -g
+CFLAGS := -Wall -Werror -Wextra -pthread -g
 SRCDIR :=coders/file
 
 all:

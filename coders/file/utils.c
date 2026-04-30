@@ -1,4 +1,6 @@
 #include "../header/codexion.h"
+#include <string.h>
+
 
 struct timespec	convert_time_stamp_dongle(t_dongle *dongle)
 {
@@ -35,10 +37,14 @@ char	*ft_strdup(char *str)
 	int		i;
 	int		size;
 	char	*ptr;
-
+	
+	if (!str)
+		return (NULL);
 	i = 0;
 	size = strlen(str);
 	ptr = malloc(sizeof(char) * (size + 1));
+	if(!ptr)
+		return NULL;
 	while (str[i])
 	{
 		ptr[i] = str[i];
@@ -48,21 +54,6 @@ char	*ft_strdup(char *str)
 	}
 	ptr[i] = 0;
 	return (ptr);
-}
-
-void	loading_screen(void)
-{
-	int	i;
-
-	i = 0;
-	printf("\033c");
-	while (i < 3)
-	{
-		printf(".");
-		fflush(stdout);
-		sleep(1);
-		i++;
-	}
 }
 
 
