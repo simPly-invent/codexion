@@ -25,16 +25,19 @@ void	init_coder(t_coder *any, t_pars *parsing, int id)
 	gettimeofday(&any->last_time_compile, NULL);
 }
 
-void	init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id)
+int	init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id)
 {
 	dongle->id = id;
 	dongle->plugged = false;
 	pthread_mutex_init(&dongle->mutex, NULL);
 	pthread_cond_init(&dongle->cond, NULL);
 	dongle->cooldown_priority = malloc(sizeof(t_coder *) * size);
+	if (!dongle->cooldown_priority)
+		return (-1);
 	dongle->len_queu = 0;
 	dongle->dongle_cooldown = parsing->dgle_cooldown;
 	gettimeofday(&dongle->last_time_register, NULL);
+	return (0);
 }
 
 void	init_monitor(t_info_monitor *monitor, t_pars *parsing,

@@ -2,8 +2,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 
-void	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles,
-		int size)
+static void	init_all_coders(t_coder *coders, t_pars *parsing, int size)
 {
 	int	i;
 	int	tmp;
@@ -16,12 +15,33 @@ void	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles,
 		i++;
 		tmp--;
 	}
+}
+
+static int	init_all_dongles(t_dongle *dongles, t_pars *parsing, int size)
+{
+	int	i;
+
 	i = 0;
 	while (i < size)
 	{
-		init_dongle(&dongles[i], parsing, size, i);
+		if (init_dongle(&dongles[i], parsing, size, i) != 0)
+		{
+			while (i > 0)
+			{
+				i--;
+				free(dongles[i].cooldown_priority);
+			}
+			return (-1);
+		}
 		i++;
 	}
+	return (0);
+}
+
+static void	link_coders_to_dongles(t_coder *coders, t_dongle *dongles, int size)
+{
+	int	i;
+
 	i = 0;
 	while (i < size)
 	{
@@ -29,6 +49,16 @@ void	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles,
 		coders[i].right = &dongles[(i + 1) % size];
 		i++;
 	}
+}
+
+int	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles,
+		int size)
+{
+	init_all_coders(coders, parsing, size);
+	if (init_all_dongles(dongles, parsing, size) != 0)
+		return (-1);
+	link_coders_to_dongles(coders, dongles, size);
+	return (0);
 }
 
 void	init_simu(t_simulation *state, int size)

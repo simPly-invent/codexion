@@ -111,6 +111,14 @@ typedef struct s_pa
     char *str;
 }       t_pa;
 
+typedef struct s_po
+{
+    int             i;
+	struct timespec	res;
+}                   t_po;
+
+
+
 typedef struct s_thmonitor
 {
     int     i;
@@ -121,8 +129,8 @@ typedef struct s_thmonitor
 }       t_thmonitor;
 
 void            init_coder(t_coder *any, t_pars *parsing, int id);
-void            init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id);
-void            init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size);
+int             init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id);
+int             init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size);
 void            init_monitor(t_info_monitor *monitor, t_pars *parsing, t_character *chara, t_coder *coders);
 void            init_pars(int *tab, t_pars *parsing, char *str);
 void            init_simu(t_simulation *state, int size);
@@ -144,7 +152,6 @@ bool            cooldown_limit(t_dongle *dongle);
 int             parser(char **argv, int size, t_pars *parsing);
 int             check_fifo_edf(char *str);
 char            *ft_strdup(char *str);
-void            loading_screen();
 void            check_simu_and_check_state(t_character *chara);
 void	        edf_order(t_dongle *dongle, t_character *chara);
 bool            get_simu_state(t_simulation *state);
