@@ -1,39 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dongle_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/01 15:55:28 by mobenais          #+#    #+#             */
+/*   Updated: 2026/05/01 16:43:40 by mobenais         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/codexion.h"
-
-
-static void	wait_for_dongle_availability(t_dongle *dongle, t_character *chara, bool is_fifo)
-{
-	struct timespec res;
-
-	if (is_fifo)
-	{
-		while ((dongle->plugged || dongle->cooldown_priority[0] != chara->coder || cooldown_limit(dongle)) && get_simu_state(chara->state))
-		{
-			res = convert_time_stamp_dongle(dongle);
-			pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
-		}
-	}
-	else
-	{
-		while ((dongle->plugged || cooldown_limit(dongle) || (dongle->cooldown_priority[0] != chara->coder)) && (get_simu_state(chara->state)))
-		{
-			res = convert_time_stamp_dongle(dongle);
-			pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
-		}
-	}
-}
-
-static void	remove_coder_from_queue(t_dongle *dongle)
-{
-	int i;
-
-	i = 0;
-	while (i < dongle->len_queu - 1)
-	{
-		dongle->cooldown_priority[i] = dongle->cooldown_priority[i + 1];
-		i++;
-	}
-}
 
 static void	finalize_dongle_acquisition(t_dongle *dongle, t_character *chara)
 {
@@ -70,11 +47,11 @@ void	dongle_in_hand(t_dongle *dongle, t_character *chara, long time)
 	{
 		if (strcmp(chara->coder->scheduler, "fifo") == 0)
 			call_fifo(dongle, chara);
-		else if(strcmp(chara->coder->scheduler, "edf") == 0)
+		else if (strcmp(chara->coder->scheduler, "edf") == 0)
 			call_edf(dongle, chara);
 	}
 	if (get_simu_state(chara->state))
-		printf("%ld %d has taken a dongle\n", time,  chara->coder->id);
+		printf("%ld %d has taken a dongle\n", time, chara->coder->id);
 }
 
 void	dongle_on_table(t_dongle *dongle)

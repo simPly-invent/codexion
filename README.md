@@ -6,9 +6,51 @@ Master concurrent programming in C through an intense simulation where coders ra
 
 The program is a simple simulation where coders race against burnout while competing for scarce USB dongles.
 
-**Deadlock Prevention**: The deadlock prevention relies on ordering the dongle acquisition: each coder always acquires the dongle with the smaller ID first, except the last coder who acquires the larger ID first. This alternating pattern breaks the circular waiting condition, preventing deadlock.
+## Blocking cases handled
 
-**Monitor Thread**: The monitor thread continuously checks the burnout status of all coders. When a coder burns out, the monitor sets the simulation state to false, which stops the entire simulation and allows the program to exit cleanly.
+This implementation addresses several critical concurrency issues to ensure robust and fair resource sharing:
+
+### Deadlock Prevention
+The deadlock prevention relies on ordering the dongle acquisition: each coder always acquires the dongle with the smaller ID first, except the last coder who acquires the larger ID first. This alternating pattern breaks the circular waiting condition, preventing deadlock by ensuring no circular dependency chains can form.
+
+### Starvation Prevention
+The scheduling algorithms (FIFO and EDF) ensure fair access to dongles. FIFO provides first-come-first-served access, while EDF prioritizes coders with earlier deadlines, preventing any coder from being indefinitely blocked.
+
+### Cooldown Handling
+Dongles have cooldown periods after use. The implementation uses condition variables to signal when cooldowns expire, allowing waiting coders to proceed without busy-waiting.
+
+### Precise Burnout Detection
+The monitor thread continuously checks the burnout status of all coders using precise timestamp calculations. When a coder burns out, the monitor immediately sets the simulation state to false, stopping all threads cleanly.
+
+### Log Serialization
+All logging operations are protected by mutexes to ensure thread-safe output. Messages are serialized to prevent interleaved output from multiple threads, maintaining readable and consistent log sequences.
+
+## Thread synchronization mechanisms
+
+The implementation uses several POSIX threading primitives to coordinate access to shared resources:
+
+### Mutexes (pthread_mutex_t)
+- **Dongle Access**: Each dongle has its own mutex protecting the plugged state and cooldown priority queue
+- **Simulation State**: A global mutex protects the simulation state variable shared between all threads
+- **Logging**: Mutexes ensure atomic log message output preventing interleaved text
+
+### Condition Variables (pthread_cond_t)
+- **Dongle Availability**: Each dongle has a condition variable that threads wait on during cooldown periods
+- **Broadcast Signaling**: When simulation ends or cooldowns expire, condition variables broadcast to wake all waiting threads
+
+### Custom Event Implementation
+- **Monitor Thread**: Continuously monitors coder burnout status using precise timing
+- **Thread-safe Communication**: The monitor thread safely communicates state changes to worker threads through protected shared variables
+
+### Race Condition Prevention
+- All shared data structures (dongle queues, simulation state, timestamps) are protected by appropriate mutexes
+- Atomic operations ensure consistent state transitions between threads
+- Thread-safe communication between coders and monitor prevents data races
+
+### Thread-safe Communication
+- Coders signal their state changes through protected shared structures
+- The monitor thread reads these states atomically to make decisions
+- Clean shutdown coordination ensures all threads exit gracefully when simulation ends
 
 # Introduction
 
