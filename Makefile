@@ -4,7 +4,9 @@ SRCDIR := coders/file
 SRCS := $(SRCDIR)/codexion.c $(SRCDIR)/parser.c $(SRCDIR)/init.c \
 		$(SRCDIR)/init_second.c $(SRCDIR)/routine.c $(SRCDIR)/thread.c \
 		$(SRCDIR)/thread_monitor.c $(SRCDIR)/dongle_utils.c \
-		$(SRCDIR)/check_validation.c $(SRCDIR)/utils.c $(SRCDIR)/utils_second.c
+		$(SRCDIR)/dongle_utils_second.c $(SRCDIR)/check_validation.c \
+		$(SRCDIR)/check_validation_second.c $(SRCDIR)/utils.c \
+		$(SRCDIR)/utils_second.c $(SRCDIR)/main.c $(SRCDIR)/main_second.c
 OBJS := $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/01 15:55:48 by mobenais          #+#    #+#             */
+/*   Updated: 2026/05/01 16:04:38 by mobenais         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/codexion.h"
 #include <pthread.h>
 #include <sys/time.h>
@@ -51,8 +63,7 @@ static void	link_coders_to_dongles(t_coder *coders, t_dongle *dongles, int size)
 	}
 }
 
-int	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles,
-		int size)
+int	init_table(t_coder *coders, t_pars *parsing, t_dongle *dongles, int size)
 {
 	init_all_coders(coders, parsing, size);
 	if (init_all_dongles(dongles, parsing, size) != 0)
@@ -68,27 +79,4 @@ void	init_simu(t_simulation *state, int size)
 	state->coders_done = 0;
 	state->size = size;
 	gettimeofday(&state->start, NULL);
-}
-
-long	convert_time_stamp_coder(t_coder *coder)
-{
-	long			result;
-	struct timeval	res;
-	pthread_mutex_lock(&coder->mutex);
-	gettimeofday(&res, NULL);
-	result = (res.tv_sec - coder->last_time_compile.tv_sec) * 1000
-		+ (res.tv_usec - coder->last_time_compile.tv_usec) / 1000;
-	pthread_mutex_unlock(&coder->mutex);
-	return (result);
-}
-
-
-long	get_timestamp_ms(t_character *chara)
-{
-	long			result;
-	struct timeval	res;
-
-	gettimeofday(&res, NULL);
-	result = (res.tv_sec - chara->state->start.tv_sec) * 1000 + (res.tv_usec - chara->state->start.tv_usec) / 1000;
-	return (result);
 }

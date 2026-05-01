@@ -1,13 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/01 15:56:39 by mobenais          #+#    #+#             */
+/*   Updated: 2026/05/01 16:02:40 by mobenais         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/codexion.h"
 #include <bits/pthreadtypes.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <time.h>	
-
+#include <time.h>
 
 static void	coder_refactor(t_character *chara)
 {
-	long timestamp;
+	long	timestamp;
 
 	if (!get_simu_state(chara->state))
 		return ;
@@ -18,7 +29,7 @@ static void	coder_refactor(t_character *chara)
 
 static void	coder_debug(t_character *chara)
 {
-	long timestamp;
+	long	timestamp;
 
 	if (!get_simu_state(chara->state))
 		return ;
@@ -56,8 +67,8 @@ void	*routine_coder(void *arg)
 
 void	coder_compile(t_character *chara)
 {
-	long 		timestamp;
-	
+	long	timestamp;
+
 	timestamp = get_timestamp_ms(chara);
 	if (!get_simu_state(chara->state))
 		return ;
