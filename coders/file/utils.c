@@ -63,10 +63,16 @@ void	edf_order(t_dongle *dongle, t_character *chara)
 	int j = dongle->len_queu;
 	long comp = 0;
 	long tmp = 0;
+	
+	pthread_mutex_lock(&chara->coder->mutex);
 	comp = chara->coder->last_time_compile.tv_sec * 1000 + chara->coder->last_time_compile.tv_usec / 1000 + chara->coder->burnout;
+	pthread_mutex_unlock(&chara->coder->mutex);
+	
 	while (i < dongle->len_queu)
 	{
+		pthread_mutex_lock(&dongle->cooldown_priority[i]->mutex);
 		tmp = dongle->cooldown_priority[i]->last_time_compile.tv_sec * 1000 + dongle->cooldown_priority[i]->last_time_compile.tv_usec / 1000 + dongle->cooldown_priority[i]->burnout;
+		pthread_mutex_unlock(&dongle->cooldown_priority[i]->mutex);
 		if (tmp > comp)
 		{
 			j = i;

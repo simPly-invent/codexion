@@ -1,14 +1,26 @@
 NAME := codexion
-CFLAGS := -Wall -Werror -Wextra -pthread -g
-SRCDIR :=coders/file
+CFLAGS := -Wall -Wextra -Werror -pthread -g
+SRCDIR := coders/file
+SRCS := $(SRCDIR)/codexion.c $(SRCDIR)/parser.c $(SRCDIR)/init.c \
+		$(SRCDIR)/init_second.c $(SRCDIR)/routine.c $(SRCDIR)/thread.c \
+		$(SRCDIR)/thread_monitor.c $(SRCDIR)/dongle_utils.c \
+		$(SRCDIR)/check_validation.c $(SRCDIR)/utils.c $(SRCDIR)/utils_second.c
+OBJS := $(SRCS:.c=.o)
 
-all:
-	$(CC) $(CFLAGS) $(SRCDIR)/*.c -o $(NAME)
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+$(SRCDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm codexion
-fclean:
+	rm -f $(OBJS)
 
-re:
+fclean: clean
+	rm -f $(NAME)
 
-.PHONY: all clean fclean clean re
+re: fclean all
+
+.PHONY: all clean fclean re

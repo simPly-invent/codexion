@@ -5,9 +5,37 @@
 #include <time.h>	
 
 
+static void	coder_refactor(t_character *chara)
+{
+	long timestamp;
+
+	if (!get_simu_state(chara->state))
+		return ;
+	timestamp = get_timestamp_ms(chara);
+	secure_log(chara, "is refactoring", timestamp);
+	check_state_session(chara->coder->debug, chara);
+}
+
+static void	coder_debug(t_character *chara)
+{
+	long timestamp;
+
+	if (!get_simu_state(chara->state))
+		return ;
+	timestamp = get_timestamp_ms(chara);
+	secure_log(chara, "is debugging", timestamp);
+	check_state_session(chara->coder->refractor, chara);
+}
+
+static void	mark_coder_done(t_character *chara)
+{
+	pthread_mutex_lock(&chara->state->mutex);
+	chara->state->coders_done++;
+	pthread_mutex_unlock(&chara->state->mutex);
+}
+
 void	*routine_coder(void *arg)
 {
-	long 		timestamp;
 	t_character	*chara;
 
 	chara = (t_character *)arg;
@@ -15,29 +43,25 @@ void	*routine_coder(void *arg)
 	{
 		if (!get_simu_state(chara->state))
 			break ;
-		timestamp = get_timestamp_ms(chara);
 		coder_compile(chara);
-		secure_log(chara, "is compiling", timestamp);
+		coder_refactor(chara);
 		if (!get_simu_state(chara->state))
 			break ;
-		timestamp = get_timestamp_ms(chara);
-		secure_log(chara, "is refactoring", timestamp);
-		check_state_session(chara->coder->debug, chara);
-		if (!get_simu_state(chara->state))
-			break ;
-		timestamp = get_timestamp_ms(chara);
-		secure_log(chara, "is debugging", timestamp);
-		check_state_session(chara->coder->refractor, chara);
+		coder_debug(chara);
 		chara->coder->routine--;
 	}
-	pthread_mutex_lock(&chara->state->mutex);
-	chara->state->coders_done++;
-	pthread_mutex_unlock(&chara->state->mutex);
+	mark_coder_done(chara);
 	return (NULL);
 }
 
 void	coder_compile(t_character *chara)
 {
+	long 		timestamp;
+	
+	timestamp = get_timestamp_ms(chara);
+	if (!get_simu_state(chara->state))
+		return ;
+	secure_log(chara, "is compiling", timestamp);
 	check_simu_and_check_state(chara);
 	pthread_mutex_lock(&chara->coder->mutex);
 	gettimeofday(&chara->coder->last_time_compile, NULL);
