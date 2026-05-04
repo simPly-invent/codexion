@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:47:13 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/04 21:42:11 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void			broadcast_to_all_dongles(t_info_monitor *info, int k);
 void			stop_simulation_burnout(t_info_monitor *info, long res, int i,
 					int k);
 void			init_allocated_structures(t_main *var);
+int				ft_atoi(const char *str);
 int				allocate_parsing_structures(t_main *var);
 int				make_heap(t_main *main);
 void			initialize_characters(t_main *main);
@@ -192,7 +193,7 @@ void			close_all_threads(t_main *var);
 void			init_thread(t_main *var);
 void			free_parser(t_main *var);
 void			wait_for_dongle_availability(t_dongle *dongle,
-					t_character *chara, bool is_fifo);
+					t_character *chara);
 void			remove_coder_from_queue(t_dongle *dongle);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:57:10 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:02:48 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/04 21:44:39 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	*thread_monitor(void *arg)
 		if (var.check < 0)
 			return (NULL);
 		pthread_mutex_lock(&var.info->chara->state->mutex);
-		if (var.info->chara->state->coders_done == var.info->size)
+		if (var.info->chara->state->coders_done == var.info->size
+			|| !get_simu_state(var.info->chara->state))
 		{
 			var.info->chara->state->simu_state = false;
 			while (var.k < var.info->size)
@@ -36,6 +37,8 @@ void	*thread_monitor(void *arg)
 				pthread_cond_broadcast(&var.info->dongles[var.k].cond);
 				var.k++;
 			}
+			pthread_mutex_unlock(&var.info->chara->state->mutex);
+			return (NULL);
 		}
 		pthread_mutex_unlock(&var.info->chara->state->mutex);
 		usleep(1000);
