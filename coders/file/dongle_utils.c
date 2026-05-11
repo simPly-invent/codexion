@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:28 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:43:40 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/09 10:37:25 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	call_fifo(t_dongle *dongle, t_character *chara)
 {
 	dongle->cooldown_priority[dongle->len_queu] = chara->coder;
 	dongle->len_queu++;
-	wait_for_dongle_availability(dongle, chara, true);
+	wait_for_dongle_availability(dongle, chara);
 	remove_coder_from_queue(dongle);
 	finalize_dongle_acquisition(dongle, chara);
 }
@@ -36,7 +36,7 @@ static void	call_fifo(t_dongle *dongle, t_character *chara)
 static void	call_edf(t_dongle *dongle, t_character *chara)
 {
 	edf_order(dongle, chara);
-	wait_for_dongle_availability(dongle, chara, false);
+	wait_for_dongle_availability(dongle, chara);
 	remove_coder_from_queue(dongle);
 	finalize_dongle_acquisition(dongle, chara);
 }
