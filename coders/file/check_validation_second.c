@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/09 11:09:30 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/01 16:42:34 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void	check_simu_and_check_state(t_character *chara)
 
 	res = convert_time_stamp_coder(chara->coder);
 	get_dongles_ordered(chara, &first, &second);
-	if (get_simu_state(chara->state) && first != second)
+	if (get_simu_state(chara->state))
 		dongle_in_hand(first, chara, res);
 	else
 		return ;
-	if (get_simu_state(chara->state) && first != second)
+	if (get_simu_state(chara->state))
 		dongle_in_hand(second, chara, res);
 }
 
