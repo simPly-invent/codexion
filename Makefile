@@ -18,7 +18,7 @@ $(SRCDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) *.log *.txt
 
 fclean: clean
 	rm -f $(NAME)

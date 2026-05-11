@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:57:57 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:04:23 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/11 21:45:38 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,13 @@ long	get_timestamp_ms(t_character *chara)
 {
 	long			result;
 	struct timeval	res;
+	struct timeval	start;
 
+	pthread_mutex_lock(&chara->state->mutex);
+	start = chara->state->start;
+	pthread_mutex_unlock(&chara->state->mutex);
 	gettimeofday(&res, NULL);
-	result = (res.tv_sec - chara->state->start.tv_sec) * 1000 + (res.tv_usec
-			- chara->state->start.tv_usec) / 1000;
+	result = (res.tv_sec - start.tv_sec) * 1000 + (res.tv_usec - start.tv_usec)
+		/ 1000;
 	return (result);
 }

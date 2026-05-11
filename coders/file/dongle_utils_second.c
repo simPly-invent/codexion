@@ -6,35 +6,21 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:42:52 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/11 21:45:02 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/codexion.h"
 
-void	wait_for_dongle_availability(t_dongle *dongle, t_character *chara,
-		bool is_fifo)
+void	wait_for_dongle_availability(t_dongle *dongle, t_character *chara)
 {
 	struct timespec	res;
 
-	if (is_fifo)
+	while ((dongle->plugged || dongle->cooldown_priority[0] != chara->coder
+			|| cooldown_limit(dongle)) && get_simu_state(chara->state))
 	{
-		while ((dongle->plugged || dongle->cooldown_priority[0] != chara->coder
-				|| cooldown_limit(dongle)) && get_simu_state(chara->state))
-		{
-			res = convert_time_stamp_dongle(dongle);
-			pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
-		}
-	}
-	else
-	{
-		while ((dongle->plugged || cooldown_limit(dongle)
-				|| (dongle->cooldown_priority[0] != chara->coder))
-			&& (get_simu_state(chara->state)))
-		{
-			res = convert_time_stamp_dongle(dongle);
-			pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
-		}
+		res = convert_time_stamp_dongle(dongle);
+		pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
 	}
 }
 
