@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:54:44 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:39:27 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/11 21:44:48 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,22 @@ void	check_state_session(int ms, t_character *chara)
 		usleep(1000);
 		i++;
 	}
+}
+
+int	is_valid_int(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
 }
