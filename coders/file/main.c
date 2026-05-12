@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:42:03 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/12 14:45:34 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	make_heap(t_main *main)
 {
 	if (allocate_main_structures(main) != 0)
 		return (-1);
-	init_simu(main->simu, main->size);
+	init_simu(main->simu, main->parsing, main->size);
 	if (init_table(main->coders, main->parsing, main->dongles, main->size) != 0)
 		return (-1);
 	initialize_characters(main);

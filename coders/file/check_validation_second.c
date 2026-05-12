@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/11 21:44:43 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:22:23 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void	stop_simulation_burnout(t_info_monitor *info, long res, int i, int k)
 	{
 		printf("%ld %d burned out\n", res, info->coders[i].id);
 		info->chara->state->simu_state = false;
-		broadcast_to_all_dongles(info, k);
 		pthread_mutex_unlock(&info->chara->state->mutex);
+		broadcast_to_all_dongles(info, k);
 	}
 }
 

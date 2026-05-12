@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:28 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/11 21:47:22 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:44:05 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ void	dongle_in_hand(t_dongle *dongle, t_character *chara)
 			call_edf(dongle, chara);
 	}
 	if (get_simu_state(chara->state))
-		printf("%ld %d has taken a dongle\n", get_timestamp_ms(chara),
-			chara->coder->id);
+		secure_log(chara, "has taken a dongle", get_timestamp_ms(chara));
 }
 
 void	dongle_on_table(t_dongle *dongle)

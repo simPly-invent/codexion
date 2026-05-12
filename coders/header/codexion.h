@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/11 21:45:44 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:28:48 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_simulation
 	pthread_mutex_t				mutex;
 	bool						simu_state;
 	int							coders_done;
+	t_pars						*parsing;
 	int							size;
 	struct timeval				start;
 }								t_simulation;
@@ -152,7 +153,8 @@ void							init_monitor(t_info_monitor *monitor,
 									t_pars *parsing, t_character *chara,
 									t_coder *coders);
 void							init_pars(int *tab, t_pars *parsing, char *str);
-void							init_simu(t_simulation *state, int size);
+void							init_simu(t_simulation *state, t_pars *parsing,
+									int size);
 void							dongle_in_hand(t_dongle *dongle,
 									t_character *chara);
 void							dongle_on_table(t_dongle *dongle);
@@ -197,12 +199,15 @@ int								make_heap(t_main *main);
 void							initialize_characters(t_main *main);
 int								allocate_main_structures(t_main *main);
 int								make_heap_second(t_main *var);
-void							create_all_threads(t_main *var);
-void							close_all_threads(t_main *var);
-void							init_thread(t_main *var);
+int								create_all_threads(t_main *var);
+int								close_all_threads(t_main *var);
+int								init_thread(t_main *var);
 void							free_parser(t_main *var);
 void							wait_for_dongle_availability(t_dongle *dongle,
 									t_character *chara);
 void							remove_coder_from_queue(t_dongle *dongle);
-
+void							coder_refactor(t_character *chara);
+void							coder_debug(t_character *chara);
+void							mark_coder_done(t_character *chara);
+void							single_coder(t_character *chara);
 #endif
