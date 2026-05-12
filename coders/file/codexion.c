@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 16:39:27 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:24:55 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,29 @@ void	free_all(t_main *var)
 	free(var);
 }
 
+static int	run_simulation(t_main *var, int argc, char **argv)
+{
+	var->verif = parser(argv, argc - 1, var->parsing);
+	if (var->verif < 0)
+	{
+		free_parser(var);
+		return (-1);
+	}
+	var->size = var->parsing->nbr_coder;
+	if (make_heap(var) < 0)
+	{
+		free_all(var);
+		return (-1);
+	}
+	if (init_thread(var) != 0)
+	{
+		free_all(var);
+		return (-1);
+	}
+	free_all(var);
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_main	*var;
@@ -53,22 +76,5 @@ int	main(int argc, char **argv)
 		return (1);
 	if (make_heap_second(var) < 0)
 		return (1);
-	var->verif = parser(argv, argc - 1, var->parsing);
-	if (var->verif < 0)
-	{
-		printf("\nAn error occurse\n");
-		free_parser(var);
-		return (1);
-	}
-	var->size = var->parsing->nbr_coder;
-	if (make_heap(var) < 0)
-	{
-		printf("\nMemory allocation failed\n");
-		free_all(var);
-		return (1);
-	}
-	init_thread(var);
-	pthread_join(var->monitor, NULL);
-	free_all(var);
-	return (0);
+	return (run_simulation(var, argc, argv));
 }
