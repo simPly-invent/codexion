@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:56:19 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 09:20:33 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:05:17 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	fill_parameters_table(t_pa *var, char **argv, int size)
 	var->j = 0;
 	while (var->i < size)
 	{
-		if (!is_valid_int(argv[var->i]) || ft_atoi(argv[var->i]) <= 0)
+		if (!is_valid_int(argv[var->i]) || ft_atoi(argv[var->i]) < 0)
 			return (-1);
 		else
 			var->tab[var->j] = ft_atoi(argv[var->i]);
