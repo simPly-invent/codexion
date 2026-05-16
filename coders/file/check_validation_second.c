@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 15:22:23 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:05:44 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	get_dongles_ordered(t_character *chara, t_dongle **first,
 		t_dongle **second)
 {
-	if (chara->coder->left->id > chara->coder->right->id)
+	if (chara->coder->id % 2 == 0)
 	{
 		*first = chara->coder->right;
 		*second = chara->coder->left;
