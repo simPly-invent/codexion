@@ -56,6 +56,7 @@ int	init_thread(t_main *var)
 
 	init_monitor(var->info, var->parsing, var->chara, var->coders);
 	gettimeofday(&start_time, NULL);
+	var->simu->start = start_time;
 	i = 0;
 	while (i < var->size)
 	{
@@ -67,9 +68,7 @@ int	init_thread(t_main *var)
 		return (-1);
 	if (create_all_threads(var) != 0)
 		broadcast_to_all_dongles(var->info, 0);
-	else if (close_all_threads(var) != 0)
-		;
-	else
+	else if (close_all_threads(var) == 0)
 	{
 		pthread_join(var->monitor, NULL);
 		return (0);

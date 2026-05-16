@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_second.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mobenais <mobenais@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:56:04 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/01 15:56:08 by mobenais         ###   ########lyon.fr   */
+/*   Updated: 2026/05/16 20:08:56 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	init_coder(t_coder *any, t_pars *parsing, int id)
 	any->routine = parsing->number_of_routine_required;
 	any->scheduler = parsing->scheduler;
 	pthread_mutex_init(&any->mutex, NULL);
-	gettimeofday(&any->last_time_compile, NULL);
+	memset(&any->last_time_compile, 0, sizeof(struct timeval));
 }
 
 int	init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id)
@@ -43,12 +43,13 @@ int	init_dongle(t_dongle *dongle, t_pars *parsing, int size, int id)
 	dongle->plugged = false;
 	pthread_mutex_init(&dongle->mutex, NULL);
 	pthread_cond_init(&dongle->cond, NULL);
-	dongle->cooldown_priority = malloc(sizeof(t_coder *) * size);
-	if (!dongle->cooldown_priority)
+	dongle->heap = malloc(sizeof(t_heap_node) * size);
+	if (!dongle->heap)
 		return (-1);
-	dongle->len_queu = 0;
+	dongle->heap_len = 0;
+	dongle->fifo_counter = 0;
 	dongle->dongle_cooldown = parsing->dgle_cooldown;
-	gettimeofday(&dongle->last_time_register, NULL);
+	memset(&dongle->last_time_register, 0, sizeof(struct timeval));
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 15:24:55 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 20:51:26 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	free_dongles_priority(t_main *var)
 	var->i = 0;
 	while (var->i < var->size)
 	{
-		free(var->dongles[var->i].cooldown_priority);
+		free(var->dongles[var->i].heap);
 		var->i++;
 	}
 }
@@ -39,6 +39,7 @@ static void	free_allocated_pointers(t_main *var)
 
 void	free_all(t_main *var)
 {
+	destroy_pthread_primitives(var);
 	free_dongles_priority(var);
 	free_allocated_pointers(var);
 	free(var);
@@ -49,6 +50,7 @@ static int	run_simulation(t_main *var, int argc, char **argv)
 	var->verif = parser(argv, argc - 1, var->parsing);
 	if (var->verif < 0)
 	{
+		printf("Error: Failed to execute simulation\n");
 		free_parser(var);
 		return (-1);
 	}
@@ -75,6 +77,9 @@ int	main(int argc, char **argv)
 	if (!var)
 		return (1);
 	if (make_heap_second(var) < 0)
+	{
+		printf("Error: Failed to execute simulation\n");
 		return (1);
-	return (run_simulation(var, argc, argv));
+	}
+		return (run_simulation(var, argc, argv));
 }

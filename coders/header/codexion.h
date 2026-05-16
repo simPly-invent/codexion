@@ -29,6 +29,13 @@ typedef struct s_dongle			t_dongle;
 typedef struct s_coder			t_coder;
 typedef struct s_character		t_character;
 typedef struct s_info_monitor	t_info_monitor;
+typedef struct s_heap_node		t_heap_node;
+
+typedef struct s_heap_node
+{
+	t_coder						*coder;
+	long						key;
+}								t_heap_node;
 
 typedef struct s_main
 {
@@ -63,8 +70,9 @@ typedef struct s_dongle
 	bool						plugged;
 	pthread_mutex_t				mutex;
 	pthread_cond_t				cond;
-	t_coder						**cooldown_priority;
-	int							len_queu;
+	t_heap_node					*heap;
+	int							heap_len;
+	long						fifo_counter;
 	int							dongle_cooldown;
 	struct timeval				last_time_register;
 }								t_dongle;
@@ -126,14 +134,6 @@ typedef struct s_po
 	struct timespec				res;
 }								t_po;
 
-typedef struct s_pb
-{
-	int							i;
-	int							j;
-	long						comp;
-	long						tmp;
-}								t_pb;
-
 typedef struct s_thmonitor
 {
 	int							i;
@@ -180,11 +180,13 @@ int								parser(char **argv, int size, t_pars *parsing);
 int								check_fifo_edf(char *str);
 char							*ft_strdup(char *str);
 void							check_simu_and_check_state(t_character *chara);
-void							edf_order(t_dongle *dongle, t_character *chara);
+long							compute_edf_key(t_coder *coder);
+void							heap_push(t_heap_node *heap, int *len,
+									t_coder *coder, long key);
+void							heap_pop(t_heap_node *heap, int *len);
 bool							get_simu_state(t_simulation *state);
 long							get_timestamp_ms(t_character *chara);
-void							secure_log(t_character *chara, char *message,
-									long timestamp);
+void							secure_log(t_character *chara, char *message);
 void							secure_message(t_character *chara,
 									char *message);
 void							get_dongles_ordered(t_character *chara,
@@ -192,7 +194,7 @@ void							get_dongles_ordered(t_character *chara,
 void							broadcast_to_all_dongles(t_info_monitor *info,
 									int k);
 void							stop_simulation_burnout(t_info_monitor *info,
-									long res, int i, int k);
+									int i, int k);
 void							init_allocated_structures(t_main *var);
 int								allocate_parsing_structures(t_main *var);
 int								make_heap(t_main *main);
@@ -205,7 +207,7 @@ int								init_thread(t_main *var);
 void							free_parser(t_main *var);
 void							wait_for_dongle_availability(t_dongle *dongle,
 									t_character *chara);
-void							remove_coder_from_queue(t_dongle *dongle);
+void							destroy_pthread_primitives(t_main *var);
 void							coder_refactor(t_character *chara);
 void							coder_debug(t_character *chara);
 void							mark_coder_done(t_character *chara);
