@@ -1,6 +1,7 @@
 NAME := codexion
 CFLAGS := -Wall -Wextra -Werror -pthread
 SRCDIR := coders/file
+HEADER := coders/header/codexion.h
 SRCS := $(SRCDIR)/codexion.c $(SRCDIR)/parser.c $(SRCDIR)/init.c \
 		$(SRCDIR)/init_second.c $(SRCDIR)/routine.c $(SRCDIR)/thread.c \
 		$(SRCDIR)/thread_monitor.c $(SRCDIR)/dongle_utils.c \
@@ -15,7 +16,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(SRCDIR)/%.o: $(SRCDIR)/%.c
+$(SRCDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
