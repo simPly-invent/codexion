@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 15:28:48 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:11:39 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int								check_burnout(int i, int k, long res,
 void							*routine_coder(void *arg);
 void							*thread_monitor(void *info);
 void							check_state_session(int ms, t_character *chara);
-void							coder_compile(t_character *chara);
+int								coder_compile(t_character *chara);
 long							convert_time_stamp_coder(t_coder *coder);
 struct timespec					convert_time_stamp_dongle(t_dongle *dongle);
 void							init_character(t_character *bunch,

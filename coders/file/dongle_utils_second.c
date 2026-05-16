@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 15:44:54 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:11:01 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,30 +45,32 @@ void	*routine_coder(void *arg)
 		return (single_coder(chara), NULL);
 	while (chara->coder->routine > 0 && get_simu_state(chara->state))
 	{
-		coder_compile(chara);
-		coder_refactor(chara);
-		if (!get_simu_state(chara->state))
+		if (coder_compile(chara) == 1)
 			break ;
 		coder_debug(chara);
+		if (!get_simu_state(chara->state))
+			break ;
+		coder_refactor(chara);
 		chara->coder->routine--;
 	}
 	mark_coder_done(chara);
 	return (NULL);
 }
 
-void	coder_compile(t_character *chara)
+int	coder_compile(t_character *chara)
 {
 	if (!get_simu_state(chara->state))
-		return ;
+		return 1;
 	pthread_mutex_lock(&chara->coder->mutex);
 	gettimeofday(&chara->coder->last_time_compile, NULL);
 	pthread_mutex_unlock(&chara->coder->mutex);
 	check_simu_and_check_state(chara);
-	if (!get_simu_state(chara->state)
-		&& chara->coder->left != chara->coder->right)
-		return ;
-	secure_log(chara, "is compiling", get_timestamp_ms(chara));
+	if (chara->coder->left == chara->coder->right)
+		return 1;
+	else	
+		secure_log(chara, "is compiling", get_timestamp_ms(chara));
 	check_state_session(chara->coder->compile, chara);
 	dongle_on_table(chara->coder->left);
 	dongle_on_table(chara->coder->right);
+	return 0;
 }
