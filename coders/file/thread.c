@@ -40,3 +40,18 @@ bool	close_thread_monitor(pthread_t thread_)
 		return (false);
 	return (true);
 }
+
+void	destroy_pthread_primitives(t_main *var)
+{
+	int	i;
+
+	pthread_mutex_destroy(&var->simu->mutex);
+	i = 0;
+	while (i < var->size)
+	{
+		pthread_mutex_destroy(&var->coders[i].mutex);
+		pthread_mutex_destroy(&var->dongles[i].mutex);
+		pthread_cond_destroy(&var->dongles[i].cond);
+		i++;
+	}
+}

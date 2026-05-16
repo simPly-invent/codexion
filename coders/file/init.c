@@ -41,7 +41,7 @@ static int	init_all_dongles(t_dongle *dongles, t_pars *parsing, int size)
 			while (i > 0)
 			{
 				i--;
-				free(dongles[i].cooldown_priority);
+				free(dongles[i].heap);
 			}
 			return (-1);
 		}
@@ -79,5 +79,5 @@ void	init_simu(t_simulation *state, t_pars *parsing, int size)
 	state->coders_done = 0;
 	state->size = size;
 	state->parsing = parsing;
-	gettimeofday(&state->start, NULL);
+	memset(&state->start, 0, sizeof(struct timeval));
 }

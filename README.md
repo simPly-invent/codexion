@@ -69,12 +69,12 @@ make re           # Recompile everything
 
 To compile, you need to provide the following parameters:
 
-- `x_coders` - Number of coders
-- `x_time_to_burnout` - Time until burnout (in milliseconds)
-- `x_compilation` - Time to compile (in milliseconds)
-- `x_refactor` - Time to refactor (in milliseconds)
-- `x_debug` - Time to debug (in milliseconds)
-- `x_routine` - Number of routines required
+- `number_of_coders` - Number of coders
+- `time_to_burnout` - Time until burnout (in milliseconds)
+- `time_to_compile` - Time to compile (in milliseconds)
+- `time_to_debug` - Time to debug (in milliseconds)
+- `time_to_refactor` - Time to refactor (in milliseconds)
+- `number_of_compiles_required` - Number of compile cycles required
 - `dongle_cooldown` - Dongle cooldown time (in milliseconds)
 - `scheduler` - Scheduling algorithm (fifo or edf)
 

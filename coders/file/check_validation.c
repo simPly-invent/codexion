@@ -36,13 +36,20 @@ int	check_fifo_edf(char *str)
 
 void	check_state_session(int ms, t_character *chara)
 {
-	int	i;
+	struct timeval	start;
+	struct timeval	now;
+	long			elapsed;
 
-	i = 0;
-	while (i < ms && get_simu_state(chara->state))
+	(void)chara;
+	gettimeofday(&start, NULL);
+	while (1)
 	{
-		usleep(1000);
-		i++;
+		gettimeofday(&now, NULL);
+		elapsed = (now.tv_sec - start.tv_sec) * 1000
+			+ (now.tv_usec - start.tv_usec) / 1000;
+		if (elapsed >= ms)
+			return ;
+		usleep(200);
 	}
 }
 

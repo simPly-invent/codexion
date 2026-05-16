@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:55:08 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/16 17:05:44 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 18:20:31 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ void	get_dongles_ordered(t_character *chara, t_dongle **first,
 {
 	if (chara->coder->id % 2 == 0)
 	{
-		*first = chara->coder->right;
-		*second = chara->coder->left;
+		*first = chara->coder->left;
+		*second = chara->coder->right;
 	}
 	else
 	{
-		*first = chara->coder->left;
-		*second = chara->coder->right;
+		*first = chara->coder->right;
+		*second = chara->coder->left;
 	}
 }
 
@@ -52,11 +52,17 @@ void	broadcast_to_all_dongles(t_info_monitor *info, int k)
 	}
 }
 
-void	stop_simulation_burnout(t_info_monitor *info, long res, int i, int k)
+void	stop_simulation_burnout(t_info_monitor *info, int i, int k)
 {
+	long			timestamp;
+	struct timeval	now;
+
+	gettimeofday(&now, NULL);
+	timestamp = (now.tv_sec - info->chara->state->start.tv_sec) * 1000
+		+ (now.tv_usec - info->chara->state->start.tv_usec) / 1000;
 	if (pthread_mutex_lock(&info->chara->state->mutex) == 0)
 	{
-		printf("%ld %d burned out\n", res, info->coders[i].id);
+		printf("%ld %d burned out\n", timestamp, info->coders[i].id);
 		info->chara->state->simu_state = false;
 		pthread_mutex_unlock(&info->chara->state->mutex);
 		broadcast_to_all_dongles(info, k);
@@ -70,7 +76,7 @@ int	check_burnout(int i, int k, long res, t_info_monitor *info)
 		res = convert_time_stamp_coder(&info->chara->coder[i]);
 		if (res > info->parsing->time_to_burnout)
 		{
-			stop_simulation_burnout(info, res, i, k);
+			stop_simulation_burnout(info, i, k);
 			return (-1);
 		}
 		i++;

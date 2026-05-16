@@ -16,23 +16,12 @@ void	wait_for_dongle_availability(t_dongle *dongle, t_character *chara)
 {
 	struct timespec	res;
 
-	while ((dongle->plugged || dongle->cooldown_priority[0] != chara->coder
+	while ((dongle->plugged || dongle->heap_len == 0
+			|| dongle->heap[0].coder != chara->coder
 			|| cooldown_limit(dongle)) && get_simu_state(chara->state))
 	{
 		res = convert_time_stamp_dongle(dongle);
 		pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &res);
-	}
-}
-
-void	remove_coder_from_queue(t_dongle *dongle)
-{
-	int	i;
-
-	i = 0;
-	while (i < dongle->len_queu - 1)
-	{
-		dongle->cooldown_priority[i] = dongle->cooldown_priority[i + 1];
-		i++;
 	}
 }
 
@@ -60,17 +49,18 @@ void	*routine_coder(void *arg)
 int	coder_compile(t_character *chara)
 {
 	if (!get_simu_state(chara->state))
-		return 1;
+		return (1);
+	check_simu_and_check_state(chara);
+	if (chara->coder->left == chara->coder->right)
+		return (1);
+	if (!get_simu_state(chara->state))
+		return (1);
 	pthread_mutex_lock(&chara->coder->mutex);
 	gettimeofday(&chara->coder->last_time_compile, NULL);
 	pthread_mutex_unlock(&chara->coder->mutex);
-	check_simu_and_check_state(chara);
-	if (chara->coder->left == chara->coder->right)
-		return 1;
-	else	
-		secure_log(chara, "is compiling", get_timestamp_ms(chara));
+	secure_log(chara, "is compiling");
 	check_state_session(chara->coder->compile, chara);
 	dongle_on_table(chara->coder->left);
 	dongle_on_table(chara->coder->right);
-	return 0;
+	return (0);
 }

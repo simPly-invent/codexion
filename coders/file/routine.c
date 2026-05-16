@@ -18,28 +18,26 @@
 
 void	coder_refactor(t_character *chara)
 {
-	long	timestamp;
-
 	if (!get_simu_state(chara->state))
 		return ;
-	timestamp = get_timestamp_ms(chara);
-	secure_log(chara, "is refactoring", timestamp);
-	check_state_session(chara->coder->debug, chara);
+	secure_log(chara, "is refactoring");
+	check_state_session(chara->coder->refractor, chara);
 }
 
 void	coder_debug(t_character *chara)
 {
-	long	timestamp;
-
 	if (!get_simu_state(chara->state))
 		return ;
-	timestamp = get_timestamp_ms(chara);
-	secure_log(chara, "is debugging", timestamp);
-	check_state_session(chara->coder->refractor, chara);
+	secure_log(chara, "is debugging");
+	check_state_session(chara->coder->debug, chara);
 }
 
 void	mark_coder_done(t_character *chara)
 {
+	pthread_mutex_lock(&chara->coder->mutex);
+	chara->coder->last_time_compile.tv_sec = LONG_MAX / 1000;
+	chara->coder->last_time_compile.tv_usec = 0;
+	pthread_mutex_unlock(&chara->coder->mutex);
 	pthread_mutex_lock(&chara->state->mutex);
 	chara->state->coders_done++;
 	pthread_mutex_unlock(&chara->state->mutex);
@@ -47,16 +45,16 @@ void	mark_coder_done(t_character *chara)
 
 void	single_coder(t_character *chara)
 {
+	long	timestamp;
+
 	usleep(chara->state->parsing->time_to_burnout * 1000);
+	timestamp = get_timestamp_ms(chara);
 	pthread_mutex_lock(&chara->state->mutex);
 	if (chara->state->simu_state == true)
 	{
-		coder_compile(chara);
+		printf("%ld %d burned out\n", timestamp, chara->coder->id);
 		chara->state->simu_state = false;
-		pthread_mutex_unlock(&chara->state->mutex);
-		secure_log(chara, "burned out", get_timestamp_ms(chara));
 	}
-	else
-		pthread_mutex_unlock(&chara->state->mutex);
+	pthread_mutex_unlock(&chara->state->mutex);
 	mark_coder_done(chara);
 }

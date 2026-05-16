@@ -67,46 +67,14 @@ char	*ft_strdup(char *str)
 	return (ptr);
 }
 
-static int	check_burnout_edf(t_pb *var, t_dongle *dongle)
+long	compute_edf_key(t_coder *coder)
 {
-	while (var->i < dongle->len_queu)
-	{
-		pthread_mutex_lock(&dongle->cooldown_priority[var->i]->mutex);
-		var->tmp = dongle->cooldown_priority[var->i]->last_time_compile.tv_sec
-			* 1000
-			+ dongle->cooldown_priority[var->i]->last_time_compile.tv_usec
-			/ 1000 + dongle->cooldown_priority[var->i]->burnout;
-		pthread_mutex_unlock(&dongle->cooldown_priority[var->i]->mutex);
-		if (var->tmp > var->comp)
-		{
-			var->j = var->i;
-			break ;
-		}
-		var->i++;
-	}
-	return (var->j);
-}
+	long	deadline;
 
-void	edf_order(t_dongle *dongle, t_character *chara)
-{
-	t_pb	var;
-
-	var.i = 0;
-	var.j = dongle->len_queu;
-	var.comp = 0;
-	var.tmp = 0;
-	pthread_mutex_lock(&chara->coder->mutex);
-	var.comp = chara->coder->last_time_compile.tv_sec * 1000
-		+ chara->coder->last_time_compile.tv_usec / 1000
-		+ chara->coder->burnout;
-	pthread_mutex_unlock(&chara->coder->mutex);
-	var.j = check_burnout_edf(&var, dongle);
-	var.i = dongle->len_queu;
-	while (var.i > var.j)
-	{
-		dongle->cooldown_priority[var.i] = dongle->cooldown_priority[var.i - 1];
-		var.i--;
-	}
-	dongle->cooldown_priority[var.j] = chara->coder;
-	dongle->len_queu++;
+	pthread_mutex_lock(&coder->mutex);
+	deadline = coder->last_time_compile.tv_sec * 1000
+		+ coder->last_time_compile.tv_usec / 1000
+		+ coder->burnout;
+	pthread_mutex_unlock(&coder->mutex);
+	return (deadline);
 }

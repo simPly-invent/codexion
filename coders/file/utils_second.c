@@ -24,10 +24,21 @@ bool	get_simu_state(t_simulation *state)
 	return (result);
 }
 
-void	secure_log(t_character *chara, char *message, long timestamp)
+void	secure_log(t_character *chara, char *message)
 {
+	struct timeval	now;
+	long			ts;
+
 	pthread_mutex_lock(&chara->state->mutex);
-	printf("%ld %d %s\n", timestamp, chara->coder->id, message);
+	if (!chara->state->simu_state)
+	{
+		pthread_mutex_unlock(&chara->state->mutex);
+		return ;
+	}
+	gettimeofday(&now, NULL);
+	ts = (now.tv_sec - chara->state->start.tv_sec) * 1000
+		+ (now.tv_usec - chara->state->start.tv_usec) / 1000;
+	printf("%ld %d %s\n", ts, chara->coder->id, message);
 	pthread_mutex_unlock(&chara->state->mutex);
 }
 
