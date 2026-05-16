@@ -6,7 +6,7 @@
 /*   By: mobenais <mobenais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 15:56:39 by mobenais          #+#    #+#             */
-/*   Updated: 2026/05/12 15:44:20 by mobenais         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:09:26 by mobenais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	single_coder(t_character *chara)
 	pthread_mutex_lock(&chara->state->mutex);
 	if (chara->state->simu_state == true)
 	{
+		coder_compile(chara);
 		chara->state->simu_state = false;
 		pthread_mutex_unlock(&chara->state->mutex);
 		secure_log(chara, "burned out", get_timestamp_ms(chara));
