@@ -1,10 +1,41 @@
 *This project has been created as part of the 42 curriculum by mobenais.*
 
-# Description
+# Codexion
 
-Master concurrent programming in C through an intense simulation where coders race against burnout while competing for scarce USB dongles. Implement POSIX threads, mutexes, condition variables, and sophisticated scheduling algorithms (FIFO/EDF) to orchestrate resource sharing, prevent deadlocks, and ensure fair access—all while keeping your coders productive before the deadline strikes.
+A multithreaded simulation in C: N coders share a limited pool of USB
+dongles and must keep compiling, debugging and refactoring before they burn
+out. Every coder is a POSIX thread; dongles are protected by mutexes and
+condition variables; a scheduler (FIFO or EDF) decides who gets a dongle
+first.
 
-The program is a simple simulation where coders race against burnout while competing for scarce USB dongles.
+![codexion run](docs/demo.gif)
+
+## Build and run
+
+```sh
+make
+./codexion <coders> <burnout> <compile> <debug> <refactor> <cooldown_limit> <cooldown> <scheduler>
+./codexion 4 1500 200 200 200 3 10 edf
+```
+
+| Argument         | Meaning                                              |
+|------------------|------------------------------------------------------|
+| `coders`         | number of coder threads                              |
+| `burnout`        | time (ms) a coder can go without finishing a cycle   |
+| `compile`        | duration (ms) of a compile step (needs 2 dongles)    |
+| `debug`          | duration (ms) of a debug step                        |
+| `refactor`       | duration (ms) of a refactor step                     |
+| `cooldown_limit` | cycles a dongle can run before it needs a cooldown   |
+| `cooldown`       | cooldown duration (ms)                               |
+| `scheduler`      | `fifo` (first come, first served) or `edf` (earliest deadline first) |
+
+Each line of output is `<timestamp_ms> <coder_id> <event>`. The simulation
+stops as soon as a coder burns out, or when every coder has completed its
+cycles.
+
+A test script that checks argument validation, scheduling fairness, burnout
+detection and data races lives in
+[tester_codexion](https://github.com/simPly-invent/tester_codexion).
 
 ## Blocking cases handled
 
